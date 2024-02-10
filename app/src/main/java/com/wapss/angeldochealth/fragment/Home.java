@@ -64,7 +64,7 @@ public class Home extends Fragment {
     TodayAppointmentAdapter todayAppointmentAdapter;
     RecyclerView rv_todayAppointment;
     LinearLayout ll_view;
-    TextView tv_totalAppointment,tv_date;
+    TextView tv_totalAppointment, tv_date;
     private Calendar calendar;
     ImageView iv_date;
     String dates;
@@ -144,7 +144,7 @@ public class Home extends Fragment {
     private void callTodayAppointmentAPI(String dates) {
         progressDialog.show();
         String Token = "Bearer " + deviceToken;
-        Call<TodayResponse> get_banner_api = ApiService.apiHolders().getTodayAppointment(Token, "50", "0", "", "Pending",dates);
+        Call<TodayResponse> get_banner_api = ApiService.apiHolders().getTodayAppointment(Token, "50", "0", "", "Pending", dates);
         get_banner_api.enqueue(new Callback<TodayResponse>() {
             @Override
             public void onResponse(Call<TodayResponse> call, Response<TodayResponse> response) {
@@ -155,8 +155,9 @@ public class Home extends Fragment {
                     if (total == 0) {
                         ll_view.setVisibility(View.VISIBLE);
                         rv_todayAppointment.setVisibility(View.GONE);
-                    }
+                    } else {
                         ll_view.setVisibility(View.GONE);
+                        rv_todayAppointment.setVisibility(View.VISIBLE);
                         todayAppointment = response.body().getResult();
                         int totals = response.body().getTotal();
                         String tt = String.valueOf(totals);
@@ -164,11 +165,17 @@ public class Home extends Fragment {
                         todayAppointmentAdapter = new TodayAppointmentAdapter(getContext(), todayAppointment, new ViewTodayAppointmentListener() {
                             @Override
                             public void onItemClickedItem(TodayResponse.Result item, int position) {
-
+                                int id = item.getId();
+                                Bundle bundle = new Bundle();
+                                bundle.putInt("id",id);
+                                Intent intent = new Intent(getContext(), AppointmentDetails.class);
+                                intent.putExtras(bundle);
+                                startActivity(intent);
                             }
                         });
                         rv_todayAppointment.setAdapter(todayAppointmentAdapter);
                         rv_todayAppointment.setLayoutManager(new LinearLayoutManager(getContext()));
+                    }
 
                 } else {
                     progressDialog.hide();

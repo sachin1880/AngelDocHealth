@@ -70,6 +70,7 @@
                     android:textStyle="bold" />
 
                 <TextView
+                    android:id="@+id/tv_bookingId"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/got_new_appointment"
@@ -121,7 +122,7 @@
                         android:orientation="vertical">
 
                         <TextView
-                            android:id="@+id/txt_profile"
+                            android:id="@+id/txt_name"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_margin="3dp"
@@ -132,11 +133,11 @@
                             android:textStyle="bold" />
 
                         <TextView
-                            android:id="@+id/txt_degree"
+                            android:id="@+id/txt_address"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="5dp"
-                            android:text="Cardiology"
+                            android:text="Kolkata"
                             android:textColor="@color/black"
                             android:textSize="@dimen/_10ssp"
                             android:textStyle="normal" />
@@ -154,6 +155,7 @@
                                 android:orientation="horizontal">
 
                                 <TextView
+                                    android:id="@+id/tv_gender"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_gravity="center"
@@ -164,6 +166,7 @@
                                     android:textSize="@dimen/_10sdp" />
 
                                 <TextView
+                                    android:id="@+id/tv_doB"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_gravity="center"
@@ -187,6 +190,7 @@
                                     android:src="@drawable/baseline_calendar_month_24" />
 
                                 <TextView
+                                    android:id="@+id/tv_bookingDate"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_gravity="center"
@@ -197,6 +201,7 @@
                             </LinearLayout>
 
                             <LinearLayout
+                                android:visibility="gone"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginStart="@dimen/_15sdp"
@@ -208,6 +213,7 @@
                                     android:src="@drawable/baseline_alarm_24" />
 
                                 <TextView
+                                    android:id="@+id/tv_time"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_gravity="center"
@@ -226,6 +232,7 @@
                             android:orientation="horizontal">
 
                             <LinearLayout
+                                android:visibility="gone"
                                 android:id="@+id/tv_show_Details"
                                 android:layout_width="@dimen/_80sdp"
                                 android:layout_height="@dimen/_25sdp"
@@ -360,6 +367,7 @@
                     android:orientation="horizontal">
 
                     <TextView
+                        android:visibility="invisible"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
@@ -370,6 +378,7 @@
                         android:textStyle="normal" />
 
                     <TextView
+                        android:visibility="invisible"
                         android:id="@+id/tv_commission"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -389,6 +398,7 @@
                     android:orientation="horizontal">
 
                     <TextView
+                        android:visibility="invisible"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
@@ -399,6 +409,7 @@
                         android:textStyle="normal" />
 
                     <TextView
+                        android:visibility="invisible"
                         android:id="@+id/tv_gst"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"

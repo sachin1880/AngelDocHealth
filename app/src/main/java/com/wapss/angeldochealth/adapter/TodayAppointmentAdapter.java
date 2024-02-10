@@ -16,6 +16,10 @@ import com.wapss.angeldochealth.interfaces.ViewTodayAppointmentListener;
 import com.wapss.angeldochealth.response.Banner_Response;
 import com.wapss.angeldochealth.response.TodayResponse;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -24,6 +28,7 @@ public class TodayAppointmentAdapter extends RecyclerView.Adapter<TodayAppointme
     public List<TodayResponse.Result> ItemList;
     Context context;
     ViewTodayAppointmentListener listener;
+    String outputTime,outputTime1;
 
     public TodayAppointmentAdapter(Context context, List<TodayResponse.Result> ItemList, ViewTodayAppointmentListener listener) {
         this.ItemList = ItemList;
@@ -46,7 +51,35 @@ public class TodayAppointmentAdapter extends RecyclerView.Adapter<TodayAppointme
         holder.gender.setText(ItemList.get(position).getPatientDetail().getGender());
         holder.age.setText(ItemList.get(position).getPatientDetail().getDob());
         holder.dates.setText(ItemList.get(position).getBookingDate());
-        holder.time.setText(ItemList.get(position).getPeriod().getTimeStart() + "" + ItemList.get(position).getPeriod().getTimeEnd());
+        try {
+            // Parse the input time string
+            SimpleDateFormat inputFormat = new SimpleDateFormat("HH:mm:ss");
+            Date date = inputFormat.parse(ItemList.get(position).getPeriod().getTimeStart());
+            // Create a calendar object and set the parsed time
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTime(date);
+
+            // Format the time in the desired output format
+            SimpleDateFormat outputFormat = new SimpleDateFormat("hh:mm a");
+            outputTime = outputFormat.format(calendar.getTime());
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        try {
+            // Parse the input time string
+            SimpleDateFormat inputFormat1 = new SimpleDateFormat("HH:mm:ss");
+            Date date1 = inputFormat1.parse(ItemList.get(position).getPeriod().getTimeEnd());
+            // Create a calendar object and set the parsed time
+            Calendar calendar1 = Calendar.getInstance();
+            calendar1.setTime(date1);
+
+            // Format the time in the desired output format
+            SimpleDateFormat outputFormat1 = new SimpleDateFormat("hh:mm a");
+            outputTime1 = outputFormat1.format(calendar1.getTime());
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        holder.time.setText(outputTime + " - " + outputTime1);
         holder.tv_address.setText(ItemList.get(position).getPatientDetail().getCity());
     }
 

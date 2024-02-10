@@ -1,6 +1,8 @@
 package com.wapss.angeldochealth.apiServices;
 
 import com.wapss.angeldochealth.response.Banner_Response;
+import com.wapss.angeldochealth.response.ConfirmAppointmentData;
+import com.wapss.angeldochealth.response.ConfirmAppointmnetResponse;
 import com.wapss.angeldochealth.response.LoginResponse;
 import com.wapss.angeldochealth.response.NotificationResponse;
 import com.wapss.angeldochealth.response.OTP_Response;
@@ -13,8 +15,10 @@ import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
 import retrofit2.http.Header;
+import retrofit2.http.PATCH;
 import retrofit2.http.POST;
 import retrofit2.http.PUT;
+import retrofit2.http.Path;
 import retrofit2.http.Query;
 
 public interface ApiHolder {
@@ -62,4 +66,13 @@ public interface ApiHolder {
 
     @GET("doctor-details/profile")
     Call<ProfileResponse> get_profile(@Header("Authorization") String Token);
+
+    @GET("consultation-booking/detail/{id}")
+    Call<ConfirmAppointmnetResponse> get_AppointmentDetails(@Header("Authorization") String Token,
+                                                            @Path("id")int id);
+
+    @PATCH("consultation-booking/booking-status/{id}")
+    Call<ConfirmAppointmentData> AcceptAppointment(@Header("Authorization") String Token,
+                                                   @Path("id")int id,
+                                                   @Field("status")String status);
 }
