@@ -26,6 +26,7 @@ public class AfterConfirmBookActivity extends AppCompatActivity {
             public void run() {
                 startActivity(new Intent(AfterConfirmBookActivity.this, MainActivity.class));
                 finish();
+
             }
         },3000);
     }
