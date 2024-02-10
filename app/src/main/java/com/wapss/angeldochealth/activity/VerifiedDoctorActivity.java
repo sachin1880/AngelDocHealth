@@ -20,12 +20,21 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.razorpay.Checkout;
+import com.razorpay.PaymentResultListener;
 import com.wapss.angeldochealth.R;
 
-public class VerifiedDoctorActivity extends AppCompatActivity {
+import org.json.JSONException;
+import org.json.JSONObject;
+
+public class VerifiedDoctorActivity extends AppCompatActivity implements PaymentResultListener {
     TextView btn_greenCard;
     private Dialog noInternetDialog;
+    int doc_Id;
+    TextView tv_fee;
+    String transId,status_code="400";
 
     @SuppressLint("MissingInflatedId")
     @Override
@@ -33,10 +42,17 @@ public class VerifiedDoctorActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_verified_doctor);
         btn_greenCard = findViewById(R.id.btn_greenCard);
+        tv_fee = findViewById(R.id.tv_fee);
         Window window = getWindow();
         window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
         window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
         window.setStatusBarColor(ContextCompat.getColor(getWindow().getContext(), R.color.black));
+        Bundle bundle = getIntent().getExtras();
+        if (bundle != null)
+        // getting the string back
+        {
+            doc_Id = bundle.getInt("doc_Id", 0);
+        }
 
         btn_greenCard.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -53,8 +69,11 @@ public class VerifiedDoctorActivity extends AppCompatActivity {
                 et_yes.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        Intent intent = new Intent(VerifiedDoctorActivity.this, AfterVerifiedDoctorActivity.class);
-                        startActivity(intent);
+//                        String fee = tv_fee.getText().toString();
+//                        int fees = Integer.parseInt(fee);
+                        callRazorPay(1);
+//                        Intent intent = new Intent(VerifiedDoctorActivity.this, AfterVerifiedDoctorActivity.class);
+//                        startActivity(intent);
                     }
                 });
                 et_cancel.setOnClickListener(new View.OnClickListener() {
@@ -88,28 +107,52 @@ public class VerifiedDoctorActivity extends AppCompatActivity {
         });
     }
 
-    private void popUp() {
-//        noInternetDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-//        noInternetDialog.setContentView(R.layout.logout_layout);
-//        noInternetDialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
-//        noInternetDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-//        noInternetDialog.show();
-//        TextView et_yes = (TextView)noInternetDialog.findViewById(R.id.et_yes);
-//        TextView et_cancel = (TextView)noInternetDialog.findViewById(R.id.et_cancel);
-//        et_yes.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-////                Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
-////                startActivity(intent);
-//            }
-//        });
-//        et_cancel.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                noInternetDialog.dismiss();
-//            }
-//        });
-//        noInternetDialog.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE | WindowManager.LayoutParams.FLAG_ALT_FOCUSABLE_IM);
-//        noInternetDialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
+    private void callRazorPay(int fee) {
+        Checkout checkout = new Checkout();
+       // checkout.setKeyID("rzp_live_GbnM6KdaZa4TXm");
+        checkout.setKeyID("rzp_test_di1mCyXNrjjxsV");
+        try{
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("name","Angel Doctor Health");
+            jsonObject.put("description","ONLINE PAYMENT");
+            jsonObject.put("prefill.email", "moni@gmail.com");
+            jsonObject.put("prefill.contact","9330603948");
+            jsonObject.put("image","R.drawable.logo");
+            jsonObject.put("color","#3399cc");
+            jsonObject.put("currency","INR");
+            jsonObject.put("amount", fee*100);
+            jsonObject.put("orderId","orderId");
+
+            JSONObject retryObj = new JSONObject();
+            retryObj.put("enabled",true);
+            retryObj.put("max_count", 4);
+
+            jsonObject.put("retry", retryObj);
+            checkout.open(VerifiedDoctorActivity.this, jsonObject);
+
+        } catch(Exception e) {
+            Toast.makeText(this, "Something went Wrong", Toast.LENGTH_SHORT).show();
+        }
+    }
+    @Override
+    public void onPaymentSuccess(String s) {
+        transId = s;
+//        pay_NZ6AcgFtSvybMu  TransId
+       // add_history();
+        //cart_models.clear();
+        //my_cart_adapter.notifyDataSetChanged();
+        Toast.makeText(VerifiedDoctorActivity.this, "Payment Successfully!"+s,Toast.LENGTH_SHORT).show();
+    }
+    @Override
+    public void onPaymentError(int i, String s) {
+        try {
+            JSONObject jsonObject = new JSONObject(s);
+            String response = String.valueOf(jsonObject.getJSONObject("error").getJSONObject("http_status_code"));
+            if (response.equals(status_code)){
+                Toast.makeText(this, "Payment Failed", Toast.LENGTH_SHORT).show();
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
     }
 }

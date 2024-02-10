@@ -4,6 +4,7 @@ import com.wapss.angeldochealth.response.Banner_Response;
 import com.wapss.angeldochealth.response.LoginResponse;
 import com.wapss.angeldochealth.response.NotificationResponse;
 import com.wapss.angeldochealth.response.OTP_Response;
+import com.wapss.angeldochealth.response.ProfileResponse;
 import com.wapss.angeldochealth.response.RegistrationResponse;
 import com.wapss.angeldochealth.response.TodayResponse;
 
@@ -58,4 +59,7 @@ public interface ApiHolder {
 
     @GET("notification")
     Call<NotificationResponse> get_notification(@Header("Authorization") String Token);
+
+    @GET("doctor-details/profile")
+    Call<ProfileResponse> get_profile(@Header("Authorization") String Token);
 }
